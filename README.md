@@ -65,3 +65,11 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 # article-testWithPostman
 API com intuito de estudo.
+
+API desenvolvida para criar um CRUD.
+Cada rota tem suas validações e em conjunto com o Postman, teremos a coleta de dados para inserir em um Dashboard de testes que será desencolvido em React.
+
+O front ainda está em produção, porém a rota que irá alimentar o front já está finalizada.
+
+Na documentação API está tudo bem descrito.
+Link da DOC: https://documenter.getpostman.com/view/18886772/2s9YkrcLBZ
