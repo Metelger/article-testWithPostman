@@ -5,10 +5,6 @@ namespace App\Services;
 use App\Models\Test;
 use Illuminate\Database\QueryException;
 
-class TestService
-{
-    public function inputTestResults($data) {
-
     /* 
         Breve explicação dos métodos utilizados:
         implode:
@@ -22,8 +18,12 @@ class TestService
         urldecode:
             Usado para decodificar uma URL. Ele reverte a substituição de caracteres especiais por códigos percentuais em uma URL para seu formato original.
     */
+    
+class TestService
+{
+    public function inputTestResults($data) {
 
-        $collectionName = $data["collectionName"];
+        $collectionName = $data["jsonData"][0]["collectionName"];
         $data = $data["jsonData"];        
 
         $arrayData = [];
