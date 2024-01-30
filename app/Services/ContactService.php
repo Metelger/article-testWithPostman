@@ -10,32 +10,30 @@ class ContactService
     public function getAllContacts()
     {
         $getAllContacts = Contact::all();
-        if(json_decode($getAllContacts) != null)
+        if(json_decode($getAllContacts) !== [])
         {
             return response()->json($getAllContacts, 200);
-        } else {
-            $error = [
-                "error" => true,
-                "description" => "Error listing contacts: contacts not found."
-            ];
-            return response()->json($error, 500);
         }
+        $message = [
+            "status" => "OK",
+            "description" => "Contact list is empty"
+        ];
+        return response()->json($message, 200);
     }
 
     public function getContactById($id)
     {
         $getContact = Contact::find($id);
 
-        if(json_decode($getContact) != null)
+        if(json_decode($getContact) !== null)
         {
             return response()->json($getContact, 200);
-        } else {
-            $error = [
-                "error" => true,
-                "description" => "Error listing contact: id not found."
-            ];
-            return response()->json($error, 500);
         }
+        $message = [
+            "status" => "OK",
+            "description" => "Id not found"
+        ];
+        return response()->json($message, 204);
     }
 
     public function createContact($data)
@@ -45,7 +43,7 @@ class ContactService
             'regionCode' => $data['phone']['regionCode'] ?? null,
             'number' => $data['phone']['number'] ?? null,
         ];
-        
+
         $contactData = [
             'name' => $data['name'] ?? null,
             'phone' => $phoneData,
@@ -71,19 +69,19 @@ class ContactService
             ];
             return response()->json($error, 500);
         }
-    
+
         try {
             $contact = Contact::create($contactData);
-            return response()->json($contact, 201); // 201 Created
+            return response()->json($contact, 201);
         } catch (\Exception $e) {
             $error = [
                 "error" => true,
                 "description" => "Error creating contact: " . $e->errorInfo[2],
             ];
-            return response()->json($error, 500); // 500 Internal Server Error
+            return response()->json($error, 500);
         }
     }
-    
+
     public function updateContact($id, $data)
     {
         try {
@@ -100,7 +98,7 @@ class ContactService
                 "error" => true,
                 "description" => "Error updating contact: id not found.",
             ];
-            return response()->json($error, 500); // 500 Internal Server Error
+            return response()->json($error, 500);
         }
     }
 
@@ -119,7 +117,7 @@ class ContactService
                 "error" => true,
                 "description" => "Error deleting contact: id not found.",
             ];
-            return response()->json($error, 500); // 500 Internal Server Error
+            return response()->json($error, 500);
         }
     }
 
@@ -131,7 +129,7 @@ class ContactService
         $allContacts = json_encode($allContacts);
         $allContacts = json_decode($allContacts);
         $allContacts = $allContacts->original;
-    
+
         if(gettype($allContacts) == "array")
         {
             $totalDeletes = count($allContacts);
@@ -144,12 +142,11 @@ class ContactService
                 "message" => $totalDeletes . " contacts deleted!"
             ];
             return response()->json($message, 200);
-        } else {
-            $error = [
-                "error" => true,
-                "description" => "Error deleting contacts: contacts not found.",
-            ];
-            return response()->json($error, 500);
         }
+        $error = [
+            "status" => "OK",
+            "description" => "Contact list is empty. No contacts to delete",
+        ];
+        return response()->json($error, 204);
     }
 }
