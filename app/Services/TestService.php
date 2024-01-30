@@ -21,7 +21,8 @@ use Illuminate\Database\QueryException;
 
 class TestService
 {
-    public function inputTestResults($data) {
+    public function inputTestResults($data)
+    {
 
         $collectionName = $data["jsonData"][0]["collectionName"];
         $data = $data["jsonData"];
@@ -29,7 +30,7 @@ class TestService
         $arrayData = [];
         foreach ($data as $data) {
 
-            if($data["dataTest"]['testResult'] == true) {
+            if ($data["dataTest"]["testResult"] === true) {
                 $testResult = [
                     "passed" => true,
                     "description" => "Passou no teste"
@@ -44,8 +45,8 @@ class TestService
             $responseBody = $data["dataTest"]["responseBody"];
             $name = $data["dataTest"]["info"];
             $method = $data["dataTest"]["method"];
-            $domain = implode('.', $data["dataTest"]["url"]["host"]);
-            $endpoint = implode('/', $data["dataTest"]["url"]["path"]);
+            $domain = implode(".", $data["dataTest"]["url"]["host"]);
+            $endpoint = implode("/", $data["dataTest"]["url"]["path"]);
             $url = $domain . "/" . $endpoint;
 
             if (!empty($data["dataTest"]["url"]["query"]) && isset($data["dataTest"]["url"]["query"][0]["value"])) {
@@ -90,15 +91,15 @@ class TestService
         }
     }
 
-    public function getAllTestResults () {
-
+    public function getAllTestResults()
+    {
         $listAll = json_decode(Test::all());
-        if($listAll != null) {
+        if ($listAll != null) {
             $arrayData = [];
 
             foreach ($listAll as $listItens ) {
 
-                $formatDate = \Carbon\Carbon::parse($listItens->created_at)->subHours(3)->format('d/m/y - H:i');
+                $formatDate = \Carbon\Carbon::parse($listItens->created_at)->subHours(3)->format("d/m/y - H:i");
                 $arrayData[] =  [
                     "name" => $listItens->jsonData->collectionName ?? null,
                     "id" => $listItens->id,
@@ -114,11 +115,12 @@ class TestService
         return response()->json($error, 500);
     }
 
-    public function getTestById($id) {
+    public function getTestById($id)
+    {
 
         $getTest = json_decode(Test::find($id));
 
-        if($getTest != null) {
+        if ($getTest != null) {
             return $getTest;
         }
         $error = [

@@ -10,8 +10,7 @@ class ContactService
     public function getAllContacts()
     {
         $getAllContacts = Contact::all();
-        if(json_decode($getAllContacts) !== [])
-        {
+        if (json_decode($getAllContacts) !== []) {
             return response()->json($getAllContacts, 200);
         }
         $message = [
@@ -25,42 +24,39 @@ class ContactService
     {
         $getContact = Contact::find($id);
 
-        if(json_decode($getContact) !== null)
-        {
+        if (json_decode($getContact) !== null) {
             return response()->json($getContact, 200);
         }
         $message = [
             "status" => "OK",
             "description" => "Id not found"
         ];
-        return response()->json($message, 204);
+        return response()->json($message, 200);
     }
 
     public function createContact($data)
     {
         $phoneData = [
-            'countryCode' => $data['phone']['countryCode'] ?? null,
-            'regionCode' => $data['phone']['regionCode'] ?? null,
-            'number' => $data['phone']['number'] ?? null,
+            "countryCode" => $data["phone"]["countryCode"] ?? null,
+            "regionCode" => $data["phone"]["regionCode"] ?? null,
+            "number" => $data["phone"]["number"] ?? null,
         ];
 
         $contactData = [
-            'name' => $data['name'] ?? null,
-            'phone' => $phoneData,
-            'email' => $data['email'] ?? null,
-            'document' => $data['document'] ?? null,
+            "name" => $data["name"] ?? null,
+            "phone" => $phoneData,
+            "email" => $data["email"] ?? null,
+            "document" => $data["document"] ?? null,
         ];
 
-        if($phoneData['countryCode'] == null || $phoneData['regionCode'] == null || $phoneData['number'] == null)
-        {
-            $nullItem = null;
-
-            if (is_null($phoneData['countryCode'])) {
-                $nullItem = 'countryCode';
-            } elseif (is_null($phoneData['regionCode'])) {
-                $nullItem = 'regionCode';
-            } elseif (is_null($phoneData['number'])) {
-                $nullItem = 'number';
+        if ($phoneData["countryCode"] === null || $phoneData["regionCode"] === null || $phoneData["number"] === null) {
+            $nullItem = "";
+            if (is_null($phoneData["countryCode"])) {
+                $nullItem = "countryCode";
+            } elseif (is_null($phoneData["regionCode"])) {
+                $nullItem = "regionCode";
+            } elseif (is_null($phoneData["number"])) {
+                $nullItem = "number";
             }
 
             $error = [
@@ -82,6 +78,7 @@ class ContactService
         }
     }
 
+    //Adicionar melhores tratativas. ID inexistente retornar 200, tratar campos do input
     public function updateContact($id, $data)
     {
         try {
@@ -130,8 +127,7 @@ class ContactService
         $allContacts = json_decode($allContacts);
         $allContacts = $allContacts->original;
 
-        if(gettype($allContacts) == "array")
-        {
+        if (gettype($allContacts) === "array") {
             $totalDeletes = count($allContacts);
             foreach ($allContacts as $ids) {
                 $ids = $ids->id;
@@ -147,6 +143,6 @@ class ContactService
             "status" => "OK",
             "description" => "Contact list is empty. No contacts to delete",
         ];
-        return response()->json($error, 204);
+        return response()->json($error, 200);
     }
 }
