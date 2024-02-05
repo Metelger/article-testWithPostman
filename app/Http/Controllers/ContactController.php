@@ -40,7 +40,7 @@ class ContactController extends Controller
 
     public function destroy($id)
     {
-        return $this->contactService->deleteContact($id);;
+        return $this->contactService->deleteContact($id);
     }
 
     public function bulkDestroy()

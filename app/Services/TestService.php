@@ -5,20 +5,6 @@ namespace App\Services;
 use App\Models\Test;
 use Illuminate\Database\QueryException;
 
-    /*
-        Breve explicação dos métodos utilizados:
-        implode:
-            Usado para concatenar elementos de um array.
-            Ele funciona informando o que será adicionado entre cada elemento e qual array será concatenado.
-        empty:
-            Verifica se uma variável está vazia. Uma variável é considerada vazia se não existir, se seu valor for null, uma string vazia, ou um array vazio.
-            No nosso caso, estamos "negando" o método para saber se é diferente de vazio.
-        isset:
-            Verifica se uma variável está definida e não é null. Retorna true se a variável estiver definida, false caso contrário.
-        urldecode:
-            Usado para decodificar uma URL. Ele reverte a substituição de caracteres especiais por códigos percentuais em uma URL para seu formato original.
-    */
-
 class TestService
 {
     public function inputTestResults($data)

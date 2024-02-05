@@ -4,27 +4,34 @@ namespace App\Services;
 
 use App\Models\Contact;
 use Illuminate\Database\QueryException;
+use App\Http\Resources\ContactResource;
 
 class ContactService
 {
     public function getAllContacts()
     {
         $getAllContacts = Contact::all();
-        if (json_decode($getAllContacts) !== []) {
-            return response()->json($getAllContacts, 200);
+
+        if ($getAllContacts->isNotEmpty()) {
+            $formatContacts = ContactResource::collection($getAllContacts);
+            return response()->json($formatContacts, 200);
         }
+
         $message = [
             "status" => "OK",
             "description" => "Contact list is empty"
         ];
+
         return response()->json($message, 200);
     }
+
 
     public function getContactById($id)
     {
         $getContact = Contact::find($id);
 
-        if (json_decode($getContact) !== null) {
+        if ($getContact !== null) {
+
             return response()->json($getContact, 200);
         }
         $message = [
@@ -37,34 +44,17 @@ class ContactService
     public function createContact($data)
     {
         $phoneData = [
-            "countryCode" => $data["phone"]["countryCode"] ?? null,
-            "regionCode" => $data["phone"]["regionCode"] ?? null,
-            "number" => $data["phone"]["number"] ?? null,
+            "countryCode" => $data["phone"]["countryCode"],
+            "regionCode" => $data["phone"]["regionCode"],
+            "number" => $data["phone"]["number"]
         ];
 
         $contactData = [
-            "name" => $data["name"] ?? null,
+            "name" => $data["name"],
             "phone" => $phoneData,
-            "email" => $data["email"] ?? null,
-            "document" => $data["document"] ?? null,
+            "email" => $data["email"],
+            "document" => $data["document"],
         ];
-
-        if ($phoneData["countryCode"] === null || $phoneData["regionCode"] === null || $phoneData["number"] === null) {
-            $nullItem = "";
-            if (is_null($phoneData["countryCode"])) {
-                $nullItem = "countryCode";
-            } elseif (is_null($phoneData["regionCode"])) {
-                $nullItem = "regionCode";
-            } elseif (is_null($phoneData["number"])) {
-                $nullItem = "number";
-            }
-
-            $error = [
-                "error" => true,
-                "description" => "The phone object must be filled in correctly! The parameter " . $nullItem . " cannot be null.",
-            ];
-            return response()->json($error, 500);
-        }
 
         try {
             $contact = Contact::create($contactData);
@@ -72,7 +62,7 @@ class ContactService
         } catch (\Exception $e) {
             $error = [
                 "error" => true,
-                "description" => "Error creating contact: " . $e->errorInfo[2],
+                "description" => "Error creating contact",
             ];
             return response()->json($error, 500);
         }
@@ -120,14 +110,8 @@ class ContactService
 
     public function bulkDestroy()
     {
-        $allContacts = $this->getAllContacts();
-
-        //Gambiarra pra tratar o array que deveria vir de getAllContacts
-        $allContacts = json_encode($allContacts);
-        $allContacts = json_decode($allContacts);
-        $allContacts = $allContacts->original;
-
-        if (gettype($allContacts) === "array") {
+        $allContacts = Contact::all();
+        if ($allContacts->isNotEmpty()) {
             $totalDeletes = count($allContacts);
             foreach ($allContacts as $ids) {
                 $ids = $ids->id;
