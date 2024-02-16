@@ -9,9 +9,9 @@ class Contact extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id';
+    protected $primaryKey = "id";
     public $incrementing = false;
-    protected $keyType = 'string';
+    protected $keyType = "string";
 
     protected static function boot()
     {
@@ -23,24 +23,24 @@ class Contact extends Model
 
 
     protected $fillable = [
-        'name',
-        'phone',
-        'email',
-        'document'
+        "name",
+        "phone",
+        "email",
+        "document"
     ];
 
     protected $casts = [
-        'phone' => 'array',
+        "phone" => "array",
     ];
 
     public static $rules = [
-        'name' => 'required',
-        'phone' => 'required|object',
-        'phone.countryCode' => 'required',
-        'phone.regionCode' => 'required',
-        'phone.number' => 'required',
-        'email' => 'required|email|unique:contacts',
-        'document' => 'required|unique:contacts'
+        "name" => "required",
+        "phone" => "required|object",
+        "phone.countryCode" => "required",
+        "phone.regionCode" => "required",
+        "phone.number" => "required",
+        "email" => "required|email|unique:contacts",
+        "document" => "required|unique:contacts"
     ];
 }
 
