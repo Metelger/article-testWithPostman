@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
+use App\Services\UserService;
 
 class UserController extends Controller
 {
+    protected $contactService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function index()
     {
         return User::all();
@@ -17,12 +25,13 @@ class UserController extends Controller
         return User::find($id);
     }
 
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        return User::create($request->all());
+        $data = $request->validated();
+        return $this->userService->createUser($data);
     }
 
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
         $user = User::findOrFail($id);
         $user->update($request->all());

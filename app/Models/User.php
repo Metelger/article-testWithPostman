@@ -17,9 +17,23 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected $primaryKey = "id";
+    public $incrementing = false;
+    protected $keyType = "string";
+
+    protected static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            $model->id = \Illuminate\Support\Str::uuid();
+        });
+    }
+
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
     ];
 
@@ -40,5 +54,12 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+    ];
+
+    public static $rules = [
+        'name' => 'required',
+        'email' => 'required|email|unique:users',
+        'phone' => 'required',
+        'password' => 'required'
     ];
 }
