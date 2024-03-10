@@ -17,17 +17,18 @@ class UserController extends Controller
 
     public function index()
     {
-        return User::all();
+        return $this->userService->listUsers();
     }
 
     public function show($id)
     {
-        return User::find($id);
+        return $this->userService->getUser($id);
     }
 
     public function store(UserRequest $request)
     {
         $data = $request->validated();
+
         return $this->userService->createUser($data);
     }
 
@@ -41,9 +42,6 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
-
-        return 204;
+        return $this->userService->deleteUser($id);
     }
 }
